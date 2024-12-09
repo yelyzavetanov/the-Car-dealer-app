@@ -11,7 +11,7 @@ export default function Filter() {
     const [modelSelect, setModelSelect] = useState<string>("");
     const [yearSelect, setYearSelect] = useState<string>("");
 
-    const isDisabled: boolean = !modelSelect && !yearSelect;
+    const isDisabled: boolean = !modelSelect.length || !yearSelect.length;
 
     const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
 
@@ -28,6 +28,8 @@ export default function Filter() {
         setModelSelect(event.target.value);
         modelId = data.find((e: any) => e.MakeName == modelSelect).MakeId;
         console.log(modelId);
+        console.log(!modelSelect, !yearSelect, isDisabled);
+
     }
 
     return (
