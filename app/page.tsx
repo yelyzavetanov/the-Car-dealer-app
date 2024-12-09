@@ -8,10 +8,12 @@ import Link from "next/link";
 export default function Filter() {
 
     const [data, setData] = useState<any>();
-    const [firstSelect, setFirstSelect] = useState<boolean>(false);
-    const [secondSelect, setSecondSelect] = useState<boolean>(false);
+    const [modelSelect, setModelSelect] = useState<boolean>(false);
+    const [yearSelect, setYearSelect] = useState<boolean>(false);
 
-    const isDisabled: boolean = !firstSelect && !secondSelect;
+    const isDisabled: boolean = !modelSelect && !yearSelect;
+
+    const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
 
     useEffect(() => {
         axios.get('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json')
@@ -27,7 +29,7 @@ export default function Filter() {
             <div className={"m-3"}>
                 <select
                     className={"bg-gray-300 p-2"}
-                    onChange={() => setFirstSelect(true)}
+                    onChange={() => setModelSelect(true)}
                 >
                     {data && data.map((e: any) =>
                         <option key={e.MakeId} className={"p-1 shadow-md"}>
@@ -39,13 +41,11 @@ export default function Filter() {
             <div className={"m-3"}>
                 <select
                     className={"bg-gray-300 p-2"}
-                    onChange={() => setSecondSelect(true)}
+                    onChange={() => setYearSelect(true)}
                 >
-                    {/*there is no information about model year in data, so for example we can filter cars by id*/}
-                    {data && data.filter((e: any) => 2015 <= Number(e.MakeId)  && Number(e.MakeId) <= 2024)
-                        .map((e: any) =>
-                        <option key={e.MakeId} className={"p-1 shadow-md"}>
-                            {e.MakeName} {e.MakeId}
+                    {years.map((e: number) =>
+                        <option key={e} className={"p-1 shadow-md"}>
+                            {e}
                         </option>
                     )}
                 </select>
