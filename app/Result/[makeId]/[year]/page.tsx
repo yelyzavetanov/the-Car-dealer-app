@@ -1,5 +1,7 @@
 import axios from "axios";
 import Vehicle from "@/components/Vehicle/Vehicle";
+import Loading from "@/app/loading";
+import {Suspense} from "react";
 
 export async function generateStaticParams() {
     const params: any[] = [];
@@ -23,11 +25,13 @@ export async function generateStaticParams() {
 
 export default function Result({params,}: { params: { makeId: string; year: number; } }) {
     return (
-        <div>
-            <div className={"bg-blue-800 white text-white min-w-screen p-3 text-2xl"}>Filter</div>
-            <div className={"p-3"}>
-                <Vehicle makeId={params.makeId} year={params.year}/>
+        <Suspense fallback={<Loading/>}>
+            <div>
+                <div className={"bg-blue-800 white text-white min-w-screen p-3 text-2xl"}>Filter</div>
+                <div className={"p-3"}>
+                    <Vehicle makeId={params.makeId} year={params.year}/>
+                </div>
             </div>
-        </div>
+        </Suspense>
     )
 }
