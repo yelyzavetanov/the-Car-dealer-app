@@ -8,12 +8,14 @@ import Link from "next/link";
 export default function Filter() {
 
     const [data, setData] = useState<any>();
-    const [modelSelect, setModelSelect] = useState<boolean>(false);
-    const [yearSelect, setYearSelect] = useState<boolean>(false);
+    const [modelSelect, setModelSelect] = useState<string>("");
+    const [yearSelect, setYearSelect] = useState<string>("");
 
     const isDisabled: boolean = !modelSelect && !yearSelect;
 
     const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+
+    let modelId;
 
     useEffect(() => {
         axios.get('https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json')
@@ -22,6 +24,12 @@ export default function Filter() {
             })
     }, [])
 
+    const onModelSelect = (event: any) => {
+        setModelSelect(event.target.value);
+        modelId = data.find((e: any) => e.MakeName == modelSelect).MakeId;
+        console.log(modelId);
+    }
+
     return (
         <div className={"min-h-screen items-center min-w-screen"}>
             <div className={"bg-blue-800 white text-white min-w-screen p-3 text-2xl"}>Filter</div>
@@ -29,11 +37,11 @@ export default function Filter() {
             <div className={"m-3"}>
                 <select
                     className={"bg-gray-300 p-2"}
-                    onChange={() => setModelSelect(true)}
+                    onChange={(event) => onModelSelect(event)}
                 >
                     {data && data.map((e: any) =>
                         <option key={e.MakeId} className={"p-1 shadow-md"}>
-                            {e.MakeName} {e.MakeId}
+                            {e.MakeName}
                         </option>
                     )}
                 </select>
@@ -41,7 +49,7 @@ export default function Filter() {
             <div className={"m-3"}>
                 <select
                     className={"bg-gray-300 p-2"}
-                    onChange={() => setYearSelect(true)}
+                    onChange={(event) => setYearSelect(event.target.value)}
                 >
                     {years.map((e: number) =>
                         <option key={e} className={"p-1 shadow-md"}>
@@ -51,7 +59,7 @@ export default function Filter() {
                 </select>
             </div>
 
-            <Link href="/Result">
+            <Link href={`/Result/${modelId}/${yearSelect}`}>
                 <button
                     className={`p-2 m-3 ${isDisabled ? `bg-gray-300` : `bg-blue-700 text-white`}`}
                     disabled={isDisabled}
